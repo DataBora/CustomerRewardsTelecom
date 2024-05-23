@@ -24,11 +24,11 @@ namespace CustomerRewardsTelecom.Controllers
         {
             var today = DateTime.Today;
 
-            //Checking if agent allocated 5 rewards
+            //Checking if agent allocated 5 rewards and customer is not null
             try
             {
                 var dailyRewardCount = _dbContext.Rewards
-                    .Where(r => r.Customer.AgentId == agentid && r.Date.Date == today)
+                    .Where(r => r.Customer != null && r.Customer.AgentId == agentid && r.Date.Date == today)
                     .Count();
 
                 if (dailyRewardCount >= 5)
