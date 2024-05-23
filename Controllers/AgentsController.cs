@@ -1,10 +1,7 @@
-﻿using CsvHelper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using CustomerRewardsTelecom.Database;
+using CustomerRewardsTelecom.DTOs;
 using CustomerRewardsTelecom.Models;
-using System.Globalization;
-using System.Threading.Tasks;
-
 namespace CustomerRewardsTelecom.Controllers
 {
     [ApiController]
@@ -19,17 +16,23 @@ namespace CustomerRewardsTelecom.Controllers
         }
 
         [HttpPost("InsertAgents")]
-        public async Task<IActionResult> InsertAgentsIntoDatabase([FromBody] Agents agents)
+        public async Task<IActionResult> InsertAgentsIntoDatabase([FromBody] AgentsPostDto agentsPostDto)
         {
-            if (agents == null)
+            if (agentsPostDto == null)
             {
                 return BadRequest("Bad request");
             }
 
             try
             {
+                // Map the DTO to the entity
+                var agent = new Agents
+                {
+                    Name = agentsPostDto.Name
+                };
+
                 // Add the agent to the database
-                _dbContext.Agents.Add(agents);
+                _dbContext.Agents.Add(agent);
                 await _dbContext.SaveChangesAsync();
 
                 return Ok("Agent inserted successfully");
@@ -40,5 +43,6 @@ namespace CustomerRewardsTelecom.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
     }
 }
