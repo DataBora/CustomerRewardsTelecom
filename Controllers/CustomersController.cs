@@ -6,7 +6,7 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
 
 {
     [ApiController]
-    [Route("api/[controler]")]
+    [Route("api/[controller]")]
     public class CustomerController : ControllerBase
     {
         private readonly SOAPDemoSoap _soapClient;
