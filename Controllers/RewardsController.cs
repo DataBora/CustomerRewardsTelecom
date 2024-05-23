@@ -3,6 +3,7 @@ using CustomerRewardsTelecom.Database;
 using CustomerRewardsTelecom.Models;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomerRewardsTelecom.Controllers
 {
@@ -22,6 +23,14 @@ namespace CustomerRewardsTelecom.Controllers
         [HttpPost("AllocateRewards")]
         public async Task<IActionResult> AllocateAwards(int agentid, int customerId, string description, decimal value)
         {
+            // Checking if the customer exists
+            var customerExists = await _dbContext.Customers.AnyAsync(c => c.Id == customerId);
+            if (!customerExists)
+            {
+                return BadRequest("Customer not found.");
+            }
+
+
             var today = DateTime.Today;
 
             //Checking if agent allocated 5 rewards and customer is not null
@@ -54,7 +63,7 @@ namespace CustomerRewardsTelecom.Controllers
             await _dbContext.SaveChangesAsync();
 
 
-            return Ok("Rewars allocated sucesfully");
+            return Ok("Rewards allocated sucesfully");
         }
 
 
