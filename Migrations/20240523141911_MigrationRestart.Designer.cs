@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerRewardsTelecom.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240523095355_init")]
-    partial class init
+    [Migration("20240523141911_MigrationRestart")]
+    partial class MigrationRestart
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,35 @@ namespace CustomerRewardsTelecom.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CustomerRewardsTelecom.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Zip")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Addresses");
+                });
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Agents", b =>
                 {
@@ -50,23 +79,35 @@ namespace CustomerRewardsTelecom.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DOB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FavoriteColors")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("HomeAddressId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("SSN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("HomeAddressId");
 
                     b.ToTable("Customers");
                 });
@@ -106,6 +147,9 @@ namespace CustomerRewardsTelecom.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -118,6 +162,24 @@ namespace CustomerRewardsTelecom.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Rewards");
+                });
+
+            modelBuilder.Entity("CustomerRewardsTelecom.Models.Customers", b =>
+                {
+                    b.HasOne("CustomerRewardsTelecom.Models.Agents", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CustomerRewardsTelecom.Models.Address", "HomeAddress")
+                        .WithMany("Customers")
+                        .HasForeignKey("HomeAddressId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("HomeAddress");
                 });
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Purchases", b =>
@@ -140,6 +202,11 @@ namespace CustomerRewardsTelecom.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("CustomerRewardsTelecom.Models.Address", b =>
+                {
+                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Customers", b =>

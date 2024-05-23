@@ -22,6 +22,35 @@ namespace CustomerRewardsTelecom.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CustomerRewardsTelecom.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Zip")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Agents", b =>
                 {
                     b.Property<int>("Id")
@@ -47,28 +76,35 @@ namespace CustomerRewardsTelecom.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.Property<int>("AgentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
+                    b.Property<DateTime>("DOB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FavoriteColors")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HomeAddressId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("SSN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AgentId");
+
+                    b.HasIndex("HomeAddressId");
 
                     b.ToTable("Customers");
                 });
@@ -130,10 +166,17 @@ namespace CustomerRewardsTelecom.Migrations
                     b.HasOne("CustomerRewardsTelecom.Models.Agents", "Agent")
                         .WithMany()
                         .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("CustomerRewardsTelecom.Models.Address", "HomeAddress")
+                        .WithMany("Customers")
+                        .HasForeignKey("HomeAddressId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.Navigation("Agent");
+
+                    b.Navigation("HomeAddress");
                 });
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Purchases", b =>
@@ -156,6 +199,11 @@ namespace CustomerRewardsTelecom.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("CustomerRewardsTelecom.Models.Address", b =>
+                {
+                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Customers", b =>
