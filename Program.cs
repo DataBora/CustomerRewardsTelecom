@@ -1,6 +1,8 @@
 using CustomerRewardsTelecom.Database;
 using Microsoft.EntityFrameworkCore;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,6 +13,13 @@ builder.Services.AddDbContext<CustomerRewardsTelecom.Database.ApplicationDBConte
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+//builder.Services.AddHttpClient<SOAPDemoSoap, SOAPDemoSoap>(client =>
+//{
+//    client.BaseAddress = new Uri("https://www.crcind.com/csp/samples/SOAP.Demo.cls");
+//});
+
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

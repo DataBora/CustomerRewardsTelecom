@@ -5,7 +5,7 @@
 namespace CustomerRewardsTelecom.Migrations
 {
     /// <inheritdoc />
-    public partial class SettingPK : Migration
+    public partial class SimplifyingCustomers : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

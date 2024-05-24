@@ -35,7 +35,8 @@ namespace CustomerRewardsTelecom.Controllers
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    csv.Context.RegisterClassMap<PurchasesCsvMap>();  // Registering the custom class map
+                    // Registering the custom class map
+                    csv.Context.RegisterClassMap<PurchasesCsvMap>();  
                     var records = csv.GetRecords<Purchases>().ToList();
 
                     foreach (var record in records)

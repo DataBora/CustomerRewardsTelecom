@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CustomerRewardsTelecom.Models;
 using CustomerRewardsTelecom.Database;
-using System.Xml.Linq;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
-using SOAPDemo;
-using System.Globalization;
+using CustomerRewardsTelecom.DTOs;
+using Newtonsoft.Json;
+
 
 namespace CustomerRewardsTelecom.Controllers
 {
@@ -14,46 +11,43 @@ namespace CustomerRewardsTelecom.Controllers
     [Route("api/[controller]")]
     public class CustomerPostSoapController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        private readonly SOAPDemoSoap _soapClient;
+        private readonly ApplicationDBContext _dbContext;
 
-        public CustomerPostSoapController(ApplicationDBContext context, SOAPDemoSoap soapClient)
+        public CustomerPostSoapController(ApplicationDBContext context)
         {
-            _context = context;
-            _soapClient = soapClient;
-        }
+            _dbContext = context;
+        
+        } 
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> PostSoapData(string id)
+        [HttpPost("CustomerPostRequest")]
+        public async Task<IActionResult> CustomerPost([FromBody] CustomerPostDto request )
         {
             try
             {
-                // Call the SOAP service to get the person data
-                var soapResponse = await _soapClient.FindPersonAsync(id);
-
-                if (soapResponse == null)
+                //check for agent ID
+                var agentResult = _dbContext.Agents.Any(a => a.Id == request.AgentId);
+                if (!agentResult)
                 {
-                    return NotFound();
+                    return NotFound("Agent not found!");
                 }
 
                 var customer = new Customers
                 {
-                    Name = soapResponse.Name,
-                    SSN = soapResponse.SSN,
-                    DOB =soapResponse.DOB, 
-                    Age = (int)soapResponse.Age,
-                    FavoriteColors = soapResponse.FavoriteColors.Select(fc => fc).ToList(),
-                    HomeAddress = new CustomerRewardsTelecom.Models.Address // Assigning HomeAddress
-                    {
-                        Street = soapResponse.Home.Street,
-                        City = soapResponse.Home.City,
-                        State = soapResponse.Home.State,
-                        Zip = soapResponse.Home.Zip
-                    }
+                    Name = request.Name,
+                    SSN = request.SSN,
+                    DOB = request.DOB,
+                    Street = request.Street,
+                    City = request.City,
+                    State = request.State,
+                    Zip = request.Zip,
+                    AgentId = request.AgentId,
+                    FavoriteColors = request.FavoriteColors
+
                 };
 
-                _context.Customers.Add(customer);
-                await _context.SaveChangesAsync();
+
+                _dbContext.Customers.Add(customer);
+                await _dbContext.SaveChangesAsync();
 
                 return Ok("Customer data saved successfully");
             }

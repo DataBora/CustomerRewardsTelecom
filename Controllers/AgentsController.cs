@@ -2,6 +2,9 @@
 using CustomerRewardsTelecom.Database;
 using CustomerRewardsTelecom.DTOs;
 using CustomerRewardsTelecom.Models;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+
 namespace CustomerRewardsTelecom.Controllers
 {
     [ApiController]
@@ -9,40 +12,44 @@ namespace CustomerRewardsTelecom.Controllers
     public class AgentsController : ControllerBase
     {
         private readonly ApplicationDBContext _dbContext;
+        
 
         public AgentsController(ApplicationDBContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        [HttpPost("InsertAgents")]
-        public async Task<IActionResult> InsertAgentsIntoDatabase([FromBody] AgentsPostDto agentsPostDto)
+        [HttpPost("InsertAgentIntoDB")]
+        public async Task<IActionResult> InsertAgentsIntoDatabase(string agentName)
         {
-            if (agentsPostDto == null)
+           
+
+            if (string.IsNullOrEmpty(agentName))
             {
-                return BadRequest("Bad request");
+              
+                return BadRequest("Agent name is missing or invalid.");
             }
 
             try
             {
-                // Map the DTO to the entity
-                var agent = new Agents
+                    // Map the DTO to the entity
+                    var agent = new Agents
+                    {
+                        Name = agentName
+                    };
+
+                    // Add the agent to the database
+                    _dbContext.Agents.Add(agent);
+                    await _dbContext.SaveChangesAsync();
+
+                    return Ok("Agent inserted successfully");
+                }
+                catch (Exception ex)
                 {
-                    Name = agentsPostDto.Name
-                };
-
-                // Add the agent to the database
-                _dbContext.Agents.Add(agent);
-                await _dbContext.SaveChangesAsync();
-
-                return Ok("Agent inserted successfully");
+               
+                    return StatusCode(500, $"An error occured, please try again: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                // Handle any exceptions
-                return StatusCode(500, $"An error occurred: {ex.Message}");
-            }
-        }
 
     }
 }

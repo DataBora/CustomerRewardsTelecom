@@ -6,9 +6,9 @@ namespace CustomerRewardsTelecom.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [MaxLength(50)]
-
         public string Description { get; set; } = String.Empty;
 
         [Required]
@@ -19,7 +19,7 @@ namespace CustomerRewardsTelecom.Models
         [Required]
         public int CustomerId { get; set; }
 
-        // Navigation property
+        // Navigation properties
         public Customers? Customer { get; set; }
     }
 }

@@ -22,39 +22,6 @@ namespace CustomerRewardsTelecom.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CustomerRewardsTelecom.Models.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Zip")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Addresses");
-                });
-
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Agents", b =>
                 {
                     b.Property<int>("Id")
@@ -81,11 +48,13 @@ namespace CustomerRewardsTelecom.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
                     b.Property<int>("AgentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -93,9 +62,6 @@ namespace CustomerRewardsTelecom.Migrations
                     b.Property<string>("FavoriteColors")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("HomeAddressId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -107,11 +73,24 @@ namespace CustomerRewardsTelecom.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Zip")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AgentId");
-
-                    b.HasIndex("HomeAddressId");
 
                     b.ToTable("Customers");
                 });
@@ -177,14 +156,7 @@ namespace CustomerRewardsTelecom.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("CustomerRewardsTelecom.Models.Address", "HomeAddress")
-                        .WithMany("Customers")
-                        .HasForeignKey("HomeAddressId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.Navigation("Agent");
-
-                    b.Navigation("HomeAddress");
                 });
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Purchases", b =>
@@ -207,11 +179,6 @@ namespace CustomerRewardsTelecom.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("CustomerRewardsTelecom.Models.Address", b =>
-                {
-                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Customers", b =>

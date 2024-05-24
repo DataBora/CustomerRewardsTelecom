@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace CustomerRewardsTelecom.Controllers
 {
     [ApiController]
@@ -13,12 +14,11 @@ namespace CustomerRewardsTelecom.Controllers
     {
         private readonly ApplicationDBContext _dbContext;
 
-
         public RewardsController(ApplicationDBContext dbContext)
         {
             _dbContext = dbContext;
+           
         }
-
 
         [HttpPost("AllocateRewards")]
         public async Task<IActionResult> AllocateAwards(int agentid, int customerId, string description, decimal value)
