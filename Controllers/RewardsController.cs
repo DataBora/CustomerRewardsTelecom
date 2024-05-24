@@ -23,11 +23,11 @@ namespace CustomerRewardsTelecom.Controllers
         [HttpPost("AllocateRewards")]
         public async Task<IActionResult> AllocateAwards(int agentid, int customerId, string description, decimal value)
         {
-            // Checking if the customer exists
+            // Checking if the customer exists in Customers table
             var customerExists = await _dbContext.Customers.AnyAsync(c => c.Id == customerId);
             if (!customerExists)
             {
-                return BadRequest("Customer not found.");
+                return BadRequest("This Custoemr is not our current Customer.");
             }
 
 
@@ -50,15 +50,29 @@ namespace CustomerRewardsTelecom.Controllers
                 return BadRequest(ex.Message);
             }
 
-            var reward = new Rewards
-            {
-                CustomerId = customerId,
-                Description = description,
-                Value = value,
-                Date = today
-            };
 
-            _dbContext.Rewards.Add(reward);
+            // Check if the customer already was Reward in Rewarad table
+            var existingReward = await _dbContext.Rewards.FirstOrDefaultAsync(r => r.CustomerId == customerId);
+
+            if (existingReward != null)
+            {
+                // Customer already has a reward entry, update the existing row
+                existingReward.RewardLevel = description;
+                existingReward.Value = value;
+                existingReward.Date = DateTime.Today;
+            }
+            else
+            {
+                // Customer does not have a reward entry, create a new row
+                var newReward = new Rewards
+                {
+                    CustomerId = customerId,
+                    RewardLevel = description,
+                    Value = value,
+                    Date = DateTime.Today
+                };
+                _dbContext.Rewards.Add(newReward);
+            }
 
             await _dbContext.SaveChangesAsync();
 

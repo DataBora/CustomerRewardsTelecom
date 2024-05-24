@@ -2,6 +2,7 @@
 
 namespace CustomerRewardsTelecom.Models
 {
+
     public class Rewards
     {
         [Key]
@@ -9,7 +10,7 @@ namespace CustomerRewardsTelecom.Models
 
         [Required]
         [MaxLength(50)]
-        public string Description { get; set; } = String.Empty;
+        public string RewardLevel { get; set; } = String.Empty;
 
         [Required]
         public decimal Value { get; set; }

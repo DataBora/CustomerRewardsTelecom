@@ -35,13 +35,20 @@ namespace CustomerRewardsTelecom.Database
                .WithMany(c => c.Purchases)
                .HasForeignKey(p => p.CustomerId);
 
+            modelBuilder.Entity<Rewards>()
+                    .HasCheckConstraint("CK_Reward_Level", "[RewardLevel] IN ('Bronze', 'Silver', 'Gold')");
 
+            // Specify column type and precision for Amount in Purchases table
+            modelBuilder.Entity<Purchases>()
+                .Property(p => p.Amount)
+                .HasColumnType("decimal(18, 2)");
+
+            // Specify column type and precision for Value in Rewards table
+            modelBuilder.Entity<Rewards>()
+                .Property(r => r.Value)
+                .HasColumnType("decimal(18, 2)");
 
 
         }
-
-        
-
-
     }
 }
