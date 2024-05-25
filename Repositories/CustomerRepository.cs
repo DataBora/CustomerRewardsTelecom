@@ -15,9 +15,9 @@ namespace CustomerRewardsTelecom.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Customers?> GetCustomerByIdAsync(int customerId)
+        public async Task<Customers?> GetCustomerByIdAsync(string customerId)
         {
-            return await _dbContext.Customers.FirstOrDefaultAsync(c => c.Id == customerId);
+            return await _dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
     }
 }

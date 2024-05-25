@@ -2,22 +2,22 @@
 using CustomerRewardsTelecom.Interfaces;
 using CustomerRewardsTelecom.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+
 
 namespace CustomerRewardsTelecom.Repositories
 {
     public class PurchasesRepository : IPurchaseRepository
     {
         private readonly ApplicationDBContext _dbContext;
-        private readonly ILogger _logger;
+        
 
-        public PurchasesRepository(ApplicationDBContext dbContext, ILogger<PurchasesRepository> logger)
+        public PurchasesRepository(ApplicationDBContext dbContext)
         {
             _dbContext = dbContext;
-            _logger = logger;
+          
         }
 
-        public async Task<Purchases?> GetPurchasesAsync(int customerId, DateTime date, decimal amount)
+        public async Task<Purchases?> GetPurchasesAsync(string customerId, DateTime date, decimal amount)
         {
             return await _dbContext.Purchases.FirstOrDefaultAsync(p => p.CustomerId == customerId && p.Date == date && p.Amount == amount);
         }

@@ -40,12 +40,12 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
         }
 
         [HttpPost("InsertCustomerIntoDatabase")]
-        public async Task<IActionResult> InsertCustomer(string customerId, int agentId)
+        public async Task<IActionResult> InsertCustomer(string customerId, string agentId)
         {
             try
             {
                 // Check if the given AgentId exists in the Agents table
-                var agentExists = await _dbContext.Agents.AnyAsync(a => a.Id == agentId);
+                var agentExists = await _dbContext.Agents.AnyAsync(a => a.AgentId == agentId);
                 if (!agentExists)
                 {
                     return BadRequest("The provided AgentId does not exist.");
@@ -59,7 +59,13 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
                 {
                     return BadRequest("Sorry we do not have that customer in out SOAP service.");
                 }
-             
+
+                // Convert customerId from string to int
+                //if (!int.TryParse(customerId, out int hashedCustomerId))
+                //{
+                //    return BadRequest("Invalid customerId format.");
+                //}
+
                 //Check if customer alreadu exist in Customers table by Name
                 var customerExistsInCustomers = await _dbContext.Customers.FirstOrDefaultAsync(c => c.Name == customer.Name);
                 if (customerExistsInCustomers != null)
@@ -69,7 +75,8 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
 
                 // Create a new customer record
                 var newCustomer = new Customers
-                {
+                {   
+                    CustomerId = customerId,
                     Name = customer.Name,
                     SSN = customer.SSN,
                     DOB = customer.DOB,
@@ -83,7 +90,7 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
                     OfficeZip = customer.Office.Zip,
                     FavoriteColors = customer.FavoriteColors.ToList(),
                     Age = (int)customer.Age, 
-                    AgentId = agentId
+                    AgentId = agentId,
                 };
 
                 // Add the new customer record to the database

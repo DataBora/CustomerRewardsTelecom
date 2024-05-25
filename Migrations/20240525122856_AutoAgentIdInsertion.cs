@@ -5,7 +5,7 @@
 namespace CustomerRewardsTelecom.Migrations
 {
     /// <inheritdoc />
-    public partial class RenamingColumnsRewards : Migration
+    public partial class AutoAgentIdInsertion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -14,17 +14,17 @@ namespace CustomerRewardsTelecom.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<bool> CustomerExistsAsync(int customerId)
+        public async Task<bool> CustomerExistsAsync(string customerId)
         {
-            return await _dbContext.Customers.AnyAsync(c => c.Id == customerId);
+            return await _dbContext.Customers.AnyAsync(c => c.CustomerId == customerId);
         }
 
-        public async Task<bool> AgentExistsAsync(int agentId)
+        public async Task<bool> AgentExistsAsync(string agentId)
         {
-            return await _dbContext.Customers.AnyAsync(a => a.Id == agentId);
+            return await _dbContext.Customers.AnyAsync(a => a.AgentId == agentId);
         }
 
-        public async Task<int> GetDailyRewardCountAsync(int agentId)
+        public async Task<int> GetDailyRewardCountAsync(string agentId)
         {
             var today = DateTime.Today;
             return await _dbContext.Rewards
@@ -32,12 +32,12 @@ namespace CustomerRewardsTelecom.Repositories
                 .CountAsync();
         }
 
-        public async Task<Rewards?> GetRewardByCustomerIdAsync(int customerId)
+        public async Task<Rewards?> GetRewardByCustomerIdAsync(string customerId)
         {
             return await _dbContext.Rewards.FirstOrDefaultAsync(r => r.CustomerId == customerId);
         }
 
-        public async Task AddOrUpdateRewardAsync(int customerId, int agentId, string rewardLevel, decimal discount)
+        public async Task AddOrUpdateRewardAsync(string customerId, string agentId, string rewardLevel, decimal discount)
         {
             var existingReward = await _dbContext.Rewards.FirstOrDefaultAsync(r => r.CustomerId == customerId);
 

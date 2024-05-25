@@ -15,59 +15,60 @@ namespace CustomerRewardsTelecom.Migrations
                 name: "Agents",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AgentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Agents", x => x.Id);
+                    table.PrimaryKey("PK_Agents", x => x.AgentId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SSN = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Street = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    State = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Zip = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
-                    AgentId = table.Column<int>(type: "int", nullable: false),
-                    FavoriteColors = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    HomeStreet = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    HomeCity = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    HomeState = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    HomeZip = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    OfficeStreet = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    OfficeCity = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    OfficeState = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    OfficeZip = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    AgentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FavoriteColors = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.CustomerId);
                     table.ForeignKey(
                         name: "FK_Customers_Agents_AgentId",
                         column: x => x.AgentId,
                         principalTable: "Agents",
-                        principalColumn: "Id");
+                        principalColumn: "AgentId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Purchases",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Purchases", x => x.Id);
+                    table.PrimaryKey("PK_Purchases", x => x.CustomerId);
                     table.ForeignKey(
                         name: "FK_Purchases_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id",
+                        principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -75,12 +76,11 @@ namespace CustomerRewardsTelecom.Migrations
                 name: "Rewards",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RewardLevel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,7 +90,7 @@ namespace CustomerRewardsTelecom.Migrations
                         name: "FK_Rewards_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id",
+                        principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -98,11 +98,6 @@ namespace CustomerRewardsTelecom.Migrations
                 name: "IX_Customers_AgentId",
                 table: "Customers",
                 column: "AgentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Purchases_CustomerId",
-                table: "Purchases",
-                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rewards_CustomerId",

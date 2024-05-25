@@ -8,7 +8,7 @@ namespace CustomerRewardsTelecom.Models
     public class Customers
     {
         [Key]
-        public int Id { get; set; }
+        public string CustomerId { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Name is required")]
         [MaxLength(50)]
@@ -54,7 +54,7 @@ namespace CustomerRewardsTelecom.Models
         public string OfficeZip { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "State is required")]
-        public int AgentId { get; set; }
+        public string AgentId { get; set; } = string.Empty ;
 
         public List<string> FavoriteColors { get; set; } = new List<string>();
 

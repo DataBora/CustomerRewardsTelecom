@@ -6,11 +6,11 @@ namespace CustomerRewardsTelecom.Models
     public class Rewards
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(50)]
-        public string RewardLevel { get; set; } = String.Empty;
+        public string RewardLevel { get; set; } = string.Empty;
 
         [Required]
         public decimal Discount { get; set; }
@@ -18,7 +18,7 @@ namespace CustomerRewardsTelecom.Models
 
         // Foreign key
         [Required]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; } = string.Empty;
 
         // Navigation properties
         public Customers? Customer { get; set; }

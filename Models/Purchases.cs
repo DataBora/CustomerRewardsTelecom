@@ -5,10 +5,7 @@ namespace CustomerRewardsTelecom.Models
     public class Purchases
     {
         [Key]
-        public int Id { get; set; }
-
-        [Required]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; } = string.Empty ;
         [Required]
         public DateTime Date { get; set; }
 

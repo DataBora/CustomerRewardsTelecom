@@ -7,6 +7,6 @@ namespace CustomerRewardsTelecom.Interfaces
     public interface ICustomerRepository
     {
 
-        Task<Customers?> GetCustomerByIdAsync(int customerId);
+        Task<Customers?> GetCustomerByIdAsync(string customerId);
     }
 }

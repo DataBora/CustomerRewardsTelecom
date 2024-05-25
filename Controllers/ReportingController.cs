@@ -33,7 +33,7 @@ namespace CustomerRewardsTelecom.Controllers
                     return BadRequest("Invalid file.");
                 }
 
-                var customersNotFound = new List<int>();
+                var customersNotFound = new List<string>();
 
                 //instantiating Readers
                 using (var reader = new StreamReader(file.OpenReadStream()))
