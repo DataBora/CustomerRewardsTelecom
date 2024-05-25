@@ -1,4 +1,5 @@
-﻿using CustomerRewardsTelecom.Models;
+﻿using CustomerRewardsTelecom.DTOs;
+using CustomerRewardsTelecom.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -10,11 +11,14 @@ namespace CustomerRewardsTelecom.Database
         {
         }
 
+        //Database Entities
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Rewards> Rewards { get; set; }
         public DbSet<Purchases> Purchases { get; set; }
         public DbSet<Agents> Agents { get; set; }
 
+        //DTO For PowerBI SalesReport
+        public DbSet<SalesAnalysisPowerBI> SalesAnalysisPowerBI { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -51,6 +55,10 @@ namespace CustomerRewardsTelecom.Database
             modelBuilder.Entity<Rewards>()
                 .Property(r => r.Discount)
                 .HasColumnType("decimal(18, 2)");
+
+            //PowerBI Keyless DTO
+            modelBuilder.Entity<SalesAnalysisPowerBI>()
+               .HasNoKey();
 
         }
 
