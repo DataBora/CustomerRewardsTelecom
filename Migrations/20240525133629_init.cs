@@ -15,7 +15,8 @@ namespace CustomerRewardsTelecom.Migrations
                 name: "Agents",
                 columns: table => new
                 {
-                    AgentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AgentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -39,7 +40,7 @@ namespace CustomerRewardsTelecom.Migrations
                     OfficeCity = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     OfficeState = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     OfficeZip = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
-                    AgentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AgentId = table.Column<int>(type: "int", nullable: false),
                     FavoriteColors = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false)
                 },
@@ -57,13 +58,15 @@ namespace CustomerRewardsTelecom.Migrations
                 name: "Purchases",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Purchases", x => x.CustomerId);
+                    table.PrimaryKey("PK_Purchases", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Purchases_Customers_CustomerId",
                         column: x => x.CustomerId,
@@ -98,6 +101,11 @@ namespace CustomerRewardsTelecom.Migrations
                 name: "IX_Customers_AgentId",
                 table: "Customers",
                 column: "AgentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Purchases_CustomerId",
+                table: "Purchases",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rewards_CustomerId",

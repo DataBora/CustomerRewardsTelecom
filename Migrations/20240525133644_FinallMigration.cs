@@ -5,7 +5,7 @@
 namespace CustomerRewardsTelecom.Migrations
 {
     /// <inheritdoc />
-    public partial class AutoAgentIdInsertion : Migration
+    public partial class FinallMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

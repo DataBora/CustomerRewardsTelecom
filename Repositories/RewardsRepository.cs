@@ -19,12 +19,12 @@ namespace CustomerRewardsTelecom.Repositories
             return await _dbContext.Customers.AnyAsync(c => c.CustomerId == customerId);
         }
 
-        public async Task<bool> AgentExistsAsync(string agentId)
+        public async Task<bool> AgentExistsAsync(int agentId)
         {
             return await _dbContext.Customers.AnyAsync(a => a.AgentId == agentId);
         }
 
-        public async Task<int> GetDailyRewardCountAsync(string agentId)
+        public async Task<int> GetDailyRewardCountAsync(int agentId)
         {
             var today = DateTime.Today;
             return await _dbContext.Rewards
@@ -37,7 +37,7 @@ namespace CustomerRewardsTelecom.Repositories
             return await _dbContext.Rewards.FirstOrDefaultAsync(r => r.CustomerId == customerId);
         }
 
-        public async Task AddOrUpdateRewardAsync(string customerId, string agentId, string rewardLevel, decimal discount)
+        public async Task AddOrUpdateRewardAsync(string customerId, int agentId, string rewardLevel, decimal discount)
         {
             var existingReward = await _dbContext.Rewards.FirstOrDefaultAsync(r => r.CustomerId == customerId);
 

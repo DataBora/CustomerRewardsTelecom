@@ -22,7 +22,7 @@ namespace CustomerRewardsTelecom.Controllers
         }
 
         [HttpPost("AllocateRewards")]
-        public async Task<IActionResult> AllocateAwards(string agentId, string customerId, string rewardLevel, decimal discount)
+        public async Task<IActionResult> AllocateAwards(int agentId, string customerId, string rewardLevel, decimal discount)
         {
             try
             {

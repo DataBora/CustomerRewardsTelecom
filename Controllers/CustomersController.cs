@@ -40,7 +40,7 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
         }
 
         [HttpPost("InsertCustomerIntoDatabase")]
-        public async Task<IActionResult> InsertCustomer(string customerId, string agentId)
+        public async Task<IActionResult> InsertCustomer(string customerId, int agentId)
         {
             try
             {

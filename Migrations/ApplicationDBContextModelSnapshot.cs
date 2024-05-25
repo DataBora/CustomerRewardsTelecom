@@ -24,8 +24,11 @@ namespace CustomerRewardsTelecom.Migrations
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Agents", b =>
                 {
-                    b.Property<string>("AgentId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("AgentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgentId"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -45,9 +48,8 @@ namespace CustomerRewardsTelecom.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<string>("AgentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -115,16 +117,25 @@ namespace CustomerRewardsTelecom.Migrations
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Purchases", b =>
                 {
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("CustomerId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Purchases");
                 });

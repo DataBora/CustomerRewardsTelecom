@@ -5,7 +5,7 @@ namespace CustomerRewardsTelecom.Models
     public class Agents
     {
         [Key]
-        public string AgentId { get; set; } = string.Empty; 
+        public int AgentId { get; set; }
 
         [Required]
         [MaxLength(50)]

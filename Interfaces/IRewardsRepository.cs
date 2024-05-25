@@ -6,10 +6,10 @@ namespace CustomerRewardsTelecom.Interfaces
     {
 
         Task<bool> CustomerExistsAsync(string customerId);
-        Task<bool> AgentExistsAsync(string agentId);
-        Task<int> GetDailyRewardCountAsync(string agentId);
+        Task<bool> AgentExistsAsync(int agentId);
+        Task<int> GetDailyRewardCountAsync(int agentId);
         Task<Rewards?> GetRewardByCustomerIdAsync(string customerId);
-        Task AddOrUpdateRewardAsync(string customerId, string agentId, string rewardLevel, decimal discount);
+        Task AddOrUpdateRewardAsync(string customerId, int agentId, string rewardLevel, decimal discount);
         Task<int> SaveChangesAsync();
     }
 }

@@ -20,7 +20,7 @@ namespace CustomerRewardsTelecom.Database
 
             modelBuilder.Entity<Customers>().HasKey(c => c.CustomerId);
             modelBuilder.Entity<Rewards>().HasKey(r => r.Id);
-            modelBuilder.Entity<Purchases>().HasKey(p => p.CustomerId);
+            modelBuilder.Entity<Purchases>().HasKey(p => p.Id);
             modelBuilder.Entity<Agents>().HasKey(a => a.AgentId);
 
             // Relationship for Agent
@@ -54,42 +54,6 @@ namespace CustomerRewardsTelecom.Database
 
         }
 
-        public override int SaveChanges()
-        {
-            AddNewAgentIds();
-            return base.SaveChanges();
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            AddNewAgentIds();
-            return base.SaveChangesAsync(cancellationToken);
-        }
-
-        private void AddNewAgentIds()
-        {
-            var newAgents = ChangeTracker.Entries<Agents>()
-                                .Where(e => e.State == EntityState.Added)
-                                .Select(e => e.Entity);
-
-            foreach (var agent in newAgents)
-            {
-                agent.AgentId = GenerateAgentId();
-            }
-        }
-
-        private string GenerateAgentId()
-        {
-            var lastAgent = Agents.OrderByDescending(a => a.AgentId).FirstOrDefault();
-            if (lastAgent != null)
-            {
-                var lastId = int.Parse(lastAgent.AgentId.Substring(3));
-                return "AGT" + (lastId + 1).ToString("D4");
-            }
-            else
-            {
-                return "AGT0001";
-            }
-        }
+     
     }
 }
