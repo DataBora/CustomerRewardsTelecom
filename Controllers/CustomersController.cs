@@ -1,9 +1,9 @@
 ﻿using CustomerRewardsTelecom.Database;
+using CustomerRewardsTelecom.DTOs;
 using CustomerRewardsTelecom.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SOAPDemo;
-using CustomerRewardsTelecom.Repositories;
 
 namespace CustomerRewardTelecom.CustomerService.Controllers
 
@@ -39,7 +39,7 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
             }
         }
 
-        [HttpPost("InsertCustomerIntoDatabase")]
+        [HttpPost("InsertCustomerIntoDatabaseFromSOAPService")]
         public async Task<IActionResult> InsertCustomer(string customerId, int agentId)
         {
             try
@@ -103,6 +103,71 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
             {
                 return StatusCode(500, $"An error occurred while processing your request. Please try again: {ex.Message}");
             }
+        }
+
+        [HttpPost("InsertNewCustomerIntoDatabase")]
+        public async Task<IActionResult> InsertNewCustomer([FromBody] CustomerPostDto customerDto, string customerId, int agentId)
+        {
+            try
+            {
+                // Check if the given AgentId exists in the Agents table
+                var agentExists = await _dbContext.Agents.AnyAsync(a => a.AgentId == agentId);
+                if (!agentExists)
+                {
+                    return BadRequest("The provided AgentId does not exist.");
+                }
+
+
+                //Check if customer alreadu exist in Customers table by Name
+                var customerExistsInCustomers = await _dbContext.Customers.FirstOrDefaultAsync(c => c.Name == customerDto.Name);
+                if (customerExistsInCustomers != null)
+                {
+                    return BadRequest("Customer already Exists in our database.");
+                }
+
+                //Calculation Age
+                int age = CalculateAge(customerDto.DOB);
+
+                // Create a new customer record
+                var newCustomer = new Customers
+                {
+                    CustomerId = customerId,
+                    Name = customerDto.Name,
+                    SSN = customerDto.SSN,
+                    DOB = customerDto.DOB,
+                    HomeStreet = customerDto.HomeStreet,
+                    HomeCity = customerDto.HomeCity,
+                    HomeState = customerDto.HomeState,
+                    HomeZip = customerDto.HomeZip,
+                    OfficeStreet = customerDto.OfficeStreet,
+                    OfficeCity = customerDto.OfficeCity,
+                    OfficeState = customerDto.OfficeState,
+                    OfficeZip = customerDto.OfficeZip,
+                    FavoriteColors = customerDto.FavoriteColors.ToList(),
+                    Age = age,
+                    AgentId = agentId,
+                };
+
+                // Add the new customer record to the database
+                _dbContext.Customers.Add(newCustomer);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(newCustomer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while processing your request. Please try again: {ex.Message}");
+            }
+        }
+
+        private static int CalculateAge(DateTime dateOfBirth)
+        {
+            int age = DateTime.Now.Year - dateOfBirth.Year;
+            if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
+            {
+                age--;
+            }
+            return age;
         }
 
     }

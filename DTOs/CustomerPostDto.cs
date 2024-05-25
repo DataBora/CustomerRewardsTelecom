@@ -4,21 +4,28 @@ namespace CustomerRewardsTelecom.DTOs
 {
     public class CustomerPostDto
     {
+
         public string Name { get; set; } = string.Empty;
    
         public string SSN { get; set; } = string.Empty;
     
         public DateTime DOB { get; set; }
     
-        public string Street { get; set; } = string.Empty;
+        public string HomeStreet { get; set; } = string.Empty;
 
-        public string City { get; set; } = string.Empty;
+        public string HomeCity { get; set; } = string.Empty;
 
-        public string State { get; set; } = String.Empty;
+        public string HomeState { get; set; } = string.Empty;
 
-        public string Zip { get; set; } = string.Empty;
+        public string HomeZip { get; set; } = string.Empty;
 
-        public int AgentId { get; set; }
+        public string OfficeStreet { get; set; } = string.Empty;
+
+        public string OfficeCity { get; set; } = string.Empty;
+
+        public string OfficeState { get; set; } = string.Empty;
+
+        public string OfficeZip { get; set; } = string.Empty;
 
         public List<string> FavoriteColors { get; set; } = new List<string>();
 
