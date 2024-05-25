@@ -45,7 +45,7 @@ namespace CustomerRewardsTelecom.Repositories
             {
                 // Customer already has a reward entry, update the existing row
                 existingReward.RewardLevel = rewardLevel;
-                existingReward.Value = discount;
+                existingReward.Discount = discount;
                 existingReward.Date = DateTime.Today;
             }
             else
@@ -55,7 +55,7 @@ namespace CustomerRewardsTelecom.Repositories
                 {
                     CustomerId = customerId,
                     RewardLevel = rewardLevel,
-                    Value = discount,
+                    Discount = discount,
                     Date = DateTime.Today
                 };
                 _dbContext.Rewards.Add(newReward);

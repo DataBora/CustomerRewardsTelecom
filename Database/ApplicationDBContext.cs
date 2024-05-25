@@ -49,7 +49,7 @@ namespace CustomerRewardsTelecom.Database
 
             // Specify column type and precision for Value in Rewards table
             modelBuilder.Entity<Rewards>()
-                .Property(r => r.Value)
+                .Property(r => r.Discount)
                 .HasColumnType("decimal(18, 2)");
 
 

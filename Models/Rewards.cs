@@ -13,7 +13,7 @@ namespace CustomerRewardsTelecom.Models
         public string RewardLevel { get; set; } = String.Empty;
 
         [Required]
-        public decimal Value { get; set; }
+        public decimal Discount { get; set; }
         public DateTime Date { get; set; }
 
         // Foreign key

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerRewardsTelecom.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240524142357_AddedConstraintForRewardLevel")]
-    partial class AddedConstraintForRewardLevel
+    [Migration("20240525094040_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -136,13 +136,13 @@ namespace CustomerRewardsTelecom.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<string>("RewardLevel")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
