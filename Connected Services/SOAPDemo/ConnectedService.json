@@ -1,7 +1,7 @@
 {
   "ExtendedData": {
     "inputs": [
-      "https://www.crcind.com/csp/samples/SOAP.Demo.cls?wsdl"
+      "*REPLACE THIS PART WITH SOAP SERVICE LINK*?wsdl"
     ],
     "collectionTypes": [
       "System.Array",
