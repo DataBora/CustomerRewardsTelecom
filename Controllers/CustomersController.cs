@@ -3,7 +3,7 @@ using CustomerRewardsTelecom.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SOAPDemo;
-
+using CustomerRewardsTelecom.Repositories;
 
 namespace CustomerRewardTelecom.CustomerService.Controllers
 
@@ -40,7 +40,7 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
         }
 
         [HttpPost("InsertCustomerIntoDatabase")]
-        public async Task<IActionResult> InsertCustomer(string id, int agentId)
+        public async Task<IActionResult> InsertCustomer(string customerId, int agentId)
         {
             try
             {
@@ -51,29 +51,38 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
                     return BadRequest("The provided AgentId does not exist.");
                 }
 
-                // Retrieve person data from SOAP service
-                var person = await _soapClient.FindPersonAsync(id);
-                if (person == null)
+                // Retrieve Customer data from SOAP service
+                var customer = await _soapClient.FindPersonAsync(customerId);
+
+                //If Customer not found send message
+                if (customer == null)
                 {
-                    return NotFound();
+                    return BadRequest("Sorry we do not have that customer in out SOAP service.");
+                }
+             
+                //Check if customer alreadu exist in Customers table by Name
+                var customerExistsInCustomers = await _dbContext.Customers.FirstOrDefaultAsync(c => c.Name == customer.Name);
+                if (customerExistsInCustomers != null)
+                {
+                    return BadRequest("Customer already Exists in our database.");
                 }
 
                 // Create a new customer record
                 var newCustomer = new Customers
                 {
-                    Name = person.Name,
-                    SSN = person.SSN,
-                    DOB = person.DOB,
-                    HomeStreet = person.Home.Street,
-                    HomeCity = person.Home.City,
-                    HomeState = person.Home.State,
-                    HomeZip = person.Home.Zip,
-                    OfficeStreet = person.Office.Street,
-                    OfficeCity = person.Office.City,
-                    OfficeState = person.Office.State,
-                    OfficeZip = person.Office.Zip,
-                    FavoriteColors = person.FavoriteColors.ToList(),
-                    Age = (int)person.Age, 
+                    Name = customer.Name,
+                    SSN = customer.SSN,
+                    DOB = customer.DOB,
+                    HomeStreet = customer.Home.Street,
+                    HomeCity = customer.Home.City,
+                    HomeState = customer.Home.State,
+                    HomeZip = customer.Home.Zip,
+                    OfficeStreet = customer.Office.Street,
+                    OfficeCity = customer.Office.City,
+                    OfficeState = customer.Office.State,
+                    OfficeZip = customer.Office.Zip,
+                    FavoriteColors = customer.FavoriteColors.ToList(),
+                    Age = (int)customer.Age, 
                     AgentId = agentId
                 };
 
