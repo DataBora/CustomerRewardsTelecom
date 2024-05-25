@@ -22,7 +22,6 @@ namespace CustomerRewardsTelecom.Database
             modelBuilder.Entity<Rewards>().HasKey(r => r.Id);
             modelBuilder.Entity<Purchases>().HasKey(p => p.Id);
 
-
             // Relationship for Agent
             modelBuilder.Entity<Customers>()
                 .HasOne(c => c.Agent)

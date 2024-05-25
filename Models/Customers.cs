@@ -21,42 +21,44 @@ namespace CustomerRewardsTelecom.Models
         [Required(ErrorMessage = "Date of Birth is required")]
         public DateTime DOB { get; set; }
 
-        [Required(ErrorMessage = "Street is required")]
+        [Required(ErrorMessage = "Home street is required")]
         [MaxLength(50)]
-        public string Street { get; set; } = string.Empty;
+        public string HomeStreet { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "City is required")]
+        [Required(ErrorMessage = "Home city is required")]
         [MaxLength(50)]
-        public string City { get; set; } = string.Empty;
+        public string HomeCity { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "State is required")]
+        [Required(ErrorMessage = "Home state is required")]
         [MaxLength(50)]
-        public string State { get; set; } = String.Empty;
+        public string HomeState { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Zip is required")]
-        [StringLength(5, MinimumLength = 5, ErrorMessage = "Zip code must be 5 characters")]
-        public string Zip { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Home zip is required")]
+        [StringLength(5, MinimumLength = 5, ErrorMessage = "Home zip code must be 5 characters")]
+        public string HomeZip { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Office street is required")]
+        [MaxLength(50)]
+        public string OfficeStreet { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Office city is required")]
+        [MaxLength(50)]
+        public string OfficeCity { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Office state is required")]
+        [MaxLength(50)]
+        public string OfficeState { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Office zip is required")]
+        [StringLength(5, MinimumLength = 5, ErrorMessage = "Office zip code must be 5 characters")]
+        public string OfficeZip { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "State is required")]
         public int AgentId { get; set; }
 
         public List<string> FavoriteColors { get; set; } = new List<string>();
 
-        //[NotMapped]
-        //public int Age
-        //{
-        //    get { return (int)(DateTime.Now - DOB).TotalDays / 365; }
-        //}
-        public int Age
-        {
-            get
-            {
-                // Calculate age based on the DOB property
-                TimeSpan span = DateTime.Now - DOB;
-                int years = (int)(span.TotalDays / 365.25);
-                return years;
-            }
-        }
+        public int Age { get; set; }
 
         // Navigation properties
         public Agents? Agent { get; set; }
