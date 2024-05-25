@@ -23,6 +23,7 @@ builder.Services.AddDbContext<CustomerRewardsTelecom.Database.ApplicationDBConte
 
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IPurchaseRepository, PurchasesRepository>();
+builder.Services.AddScoped<IRewardsRepository, RewardsRepository>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

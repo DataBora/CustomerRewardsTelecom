@@ -4,6 +4,8 @@ using CustomerRewardsTelecom.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using CustomerRewardsTelecom.Interfaces;
 
 
 namespace CustomerRewardsTelecom.Controllers
@@ -12,74 +14,45 @@ namespace CustomerRewardsTelecom.Controllers
     [Route("api/[controller]")]
     public class RewardsController : ControllerBase
     {
-        private readonly ApplicationDBContext _dbContext;
+        private readonly IRewardsRepository _rewardRepository;
 
-        public RewardsController(ApplicationDBContext dbContext)
+        public RewardsController(IRewardsRepository rewardRepository)
         {
-            _dbContext = dbContext;
-           
+            _rewardRepository = rewardRepository;
         }
 
         [HttpPost("AllocateRewards")]
-        public async Task<IActionResult> AllocateAwards(int agentid, int customerId, string description, decimal value)
+        public async Task<IActionResult> AllocateAwards(int agentId, int customerId, string rewardLevel, decimal discount)
         {
-            // Checking if the customer exists in Customers table
-            var customerExists = await _dbContext.Customers.AnyAsync(c => c.Id == customerId);
-            if (!customerExists)
-            {
-                return BadRequest("This Custoemr is not our current Customer.");
-            }
-
-
-            var today = DateTime.Today;
-
-            //Checking if agent allocated 5 rewards and customer is not null
             try
             {
-                var dailyRewardCount = _dbContext.Rewards
-                    .Where(r => r.Customer != null && r.Customer.AgentId == agentid && r.Date.Date == today)
-                    .Count();
+                var customerExists = await _rewardRepository.CustomerExistsAsync(customerId);
+                if (!customerExists)
+                {
+                    return BadRequest("This Customer is not our current Customer.");
+                }
 
+                var agentExists = await _rewardRepository.AgentExistsAsync(agentId);
+                if (!agentExists)
+                {
+                    return BadRequest("We don't have this Agent in our company.");
+                }
+
+                var dailyRewardCount = await _rewardRepository.GetDailyRewardCountAsync(agentId);
                 if (dailyRewardCount >= 5)
                 {
                     return BadRequest("Daily limit is 5 rewards per Agent.");
                 }
+
+                await _rewardRepository.AddOrUpdateRewardAsync(customerId, agentId, rewardLevel, discount);
+                await _rewardRepository.SaveChangesAsync();
+
+                return Ok("Rewards allocated successfully");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, $"UPS! We can't do that :(  Check for REWARD LEVEL (Bronze, Silver, Gold). {ex.Message}");
             }
-
-
-            // Check if the customer already was Reward in Rewarad table
-            var existingReward = await _dbContext.Rewards.FirstOrDefaultAsync(r => r.CustomerId == customerId);
-
-            if (existingReward != null)
-            {
-                // Customer already has a reward entry, update the existing row
-                existingReward.RewardLevel = description;
-                existingReward.Value = value;
-                existingReward.Date = DateTime.Today;
-            }
-            else
-            {
-                // Customer does not have a reward entry, create a new row
-                var newReward = new Rewards
-                {
-                    CustomerId = customerId,
-                    RewardLevel = description,
-                    Value = value,
-                    Date = DateTime.Today
-                };
-                _dbContext.Rewards.Add(newReward);
-            }
-
-            await _dbContext.SaveChangesAsync();
-
-
-            return Ok("Rewards allocated sucesfully");
         }
-
-
     }
 }
