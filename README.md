@@ -49,10 +49,10 @@ PowerBI .pbix file (replace url within Power Query if running on other port)
 
 ## Database Schema
 
-![Database Schema](images/DBSchemaRewards.jpg)
+![Database Schema](images/DBSchemaRewards.JPG)
 
 ## PowerBI Report
 
-![PowerBI Report](images/PBISAlesReportRewards.jpg)
+![PowerBI Report](images/PBISAlesReportRewards.JPG)
 
 
