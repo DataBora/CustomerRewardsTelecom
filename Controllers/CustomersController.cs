@@ -60,12 +60,6 @@ namespace CustomerRewardTelecom.CustomerService.Controllers
                     return BadRequest("Sorry we do not have that customer in out SOAP service.");
                 }
 
-                // Convert customerId from string to int
-                //if (!int.TryParse(customerId, out int hashedCustomerId))
-                //{
-                //    return BadRequest("Invalid customerId format.");
-                //}
-
                 //Check if customer alreadu exist in Customers table by Name
                 var customerExistsInCustomers = await _dbContext.Customers.FirstOrDefaultAsync(c => c.Name == customer.Name);
                 if (customerExistsInCustomers != null)

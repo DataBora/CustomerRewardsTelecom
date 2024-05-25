@@ -19,7 +19,7 @@ namespace CustomerRewardsTelecom.Database
         {
 
             modelBuilder.Entity<Customers>().HasKey(c => c.CustomerId);
-            modelBuilder.Entity<Rewards>().HasKey(r => r.Id);
+            modelBuilder.Entity<Rewards>().HasKey(r => r.CustomerId);
             modelBuilder.Entity<Purchases>().HasKey(p => p.Id);
             modelBuilder.Entity<Agents>().HasKey(a => a.AgentId);
 

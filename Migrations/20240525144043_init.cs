@@ -79,15 +79,14 @@ namespace CustomerRewardsTelecom.Migrations
                 name: "Rewards",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RewardLevel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rewards", x => x.Id);
+                    table.PrimaryKey("PK_Rewards", x => x.CustomerId);
                     table.CheckConstraint("CK_Reward_Level", "[RewardLevel] IN ('Bronze', 'Silver', 'Gold')");
                     table.ForeignKey(
                         name: "FK_Rewards_Customers_CustomerId",
@@ -105,11 +104,6 @@ namespace CustomerRewardsTelecom.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Purchases_CustomerId",
                 table: "Purchases",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Rewards_CustomerId",
-                table: "Rewards",
                 column: "CustomerId");
         }
 

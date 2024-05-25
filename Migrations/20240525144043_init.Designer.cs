@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerRewardsTelecom.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240525133629_init")]
+    [Migration("20240525144043_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -145,11 +145,7 @@ namespace CustomerRewardsTelecom.Migrations
 
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Rewards", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date")
@@ -163,9 +159,7 @@ namespace CustomerRewardsTelecom.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
+                    b.HasKey("CustomerId");
 
                     b.ToTable("Rewards", t =>
                         {
@@ -198,8 +192,8 @@ namespace CustomerRewardsTelecom.Migrations
             modelBuilder.Entity("CustomerRewardsTelecom.Models.Rewards", b =>
                 {
                     b.HasOne("CustomerRewardsTelecom.Models.Customers", "Customer")
-                        .WithMany("Rewards")
-                        .HasForeignKey("CustomerId")
+                        .WithOne("Reward")
+                        .HasForeignKey("CustomerRewardsTelecom.Models.Rewards", "CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -210,7 +204,7 @@ namespace CustomerRewardsTelecom.Migrations
                 {
                     b.Navigation("Purchases");
 
-                    b.Navigation("Rewards");
+                    b.Navigation("Reward");
                 });
 #pragma warning restore 612, 618
         }

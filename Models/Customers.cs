@@ -64,7 +64,7 @@ namespace CustomerRewardsTelecom.Models
         public Agents? Agent { get; set; }
 
         // Navigation properties
-        public ICollection<Rewards> Rewards { get; set; } = new List<Rewards>();
+        public Rewards? Reward { get; set; }
         public ICollection<Purchases> Purchases { get; set; } = new List<Purchases>();
 
     }
