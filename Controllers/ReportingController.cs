@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using CustomerRewardsTelecom.Database;
 using CustomerRewardsTelecom.Models;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CustomerRewardsTelecom.Repositories;
+using CustomerRewardsTelecom.Interfaces;
+using CustomerRewardsTelecom.Helpers;
 
 namespace CustomerRewardsTelecom.Controllers
 {
@@ -13,11 +13,13 @@ namespace CustomerRewardsTelecom.Controllers
     [Route("api/[controller]")]
     public class ReportingController : ControllerBase
     {
-        private readonly ApplicationDBContext _dbContext;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IPurchaseRepository _purchaseRepository;
 
-        public ReportingController(ApplicationDBContext dbContext)
+        public ReportingController(ICustomerRepository customerRepository, IPurchaseRepository purchaseRepository)
         {
-            _dbContext = dbContext;
+            _customerRepository = customerRepository;
+            _purchaseRepository = purchaseRepository;
         }
 
         [HttpPost("UploadReport")]
@@ -25,6 +27,7 @@ namespace CustomerRewardsTelecom.Controllers
         {
             try
             {
+                //Check if file exists or empty
                 if (file == null || file.Length == 0)
                 {
                     return BadRequest("Invalid file.");
@@ -32,6 +35,7 @@ namespace CustomerRewardsTelecom.Controllers
 
                 var customersNotFound = new List<int>();
 
+                //instantiating Readers
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
@@ -41,7 +45,20 @@ namespace CustomerRewardsTelecom.Controllers
 
                     foreach (var record in records)
                     {
-                        var customer = _dbContext.Customers.FirstOrDefault(c => c.Id == record.CustomerId);
+                        //Check if we have this customer in Customers table
+                        var customer = await _customerRepository.GetCustomerByIdAsync(record.CustomerId);
+
+                        //Check if we have customer already within Purchases table
+                        var existingPurchase = await _purchaseRepository.GetPurchasesAsync(record.CustomerId, record.Date, record.Amount);
+
+
+                        if (existingPurchase != null)
+                        {
+                            throw new Exception($"Purchase records already exist in database.");
+                            //ModelState.AddModelError("", "Purchase records already exist in database");
+                            //return StatusCode(422, ModelState);
+                        }
+                        
 
                         if (customer != null)
                         {
@@ -52,7 +69,8 @@ namespace CustomerRewardsTelecom.Controllers
                                 Amount = record.Amount,
                                 Customer = customer
                             };
-                            _dbContext.Purchases.Add(purchase);
+
+                            await _purchaseRepository.AddPurchaseAsync(purchase);
                         }
                         else
                         {
@@ -64,7 +82,7 @@ namespace CustomerRewardsTelecom.Controllers
                         throw new Exception($"The following customers were not found in the database: {string.Join(", ", customersNotFound)}");
                     }
 
-                    await _dbContext.SaveChangesAsync();
+                    await _purchaseRepository.SaveChangesAsync();
                    
                 }
                 return Ok("Report processed successfully!");

@@ -1,4 +1,6 @@
 using CustomerRewardsTelecom.Database;
+using CustomerRewardsTelecom.Interfaces;
+using CustomerRewardsTelecom.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -19,7 +21,8 @@ builder.Services.AddDbContext<CustomerRewardsTelecom.Database.ApplicationDBConte
 //    client.BaseAddress = new Uri("https://www.crcind.com/csp/samples/SOAP.Demo.cls");
 //});
 
-
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IPurchaseRepository, PurchasesRepository>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
